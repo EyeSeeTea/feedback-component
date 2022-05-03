@@ -36,9 +36,9 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
 
     return (
         <ThemeProvider theme={theme}>
-            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-start"}>
+            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
                 <StyledButton
-                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-start"}
+                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
                     variant="contained"
                     color="primary"
                     endIcon={<FeedbackIcon />}
