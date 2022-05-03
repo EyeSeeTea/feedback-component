@@ -17,24 +17,19 @@ export interface FeedbackOptions {
 }
 
 export interface Issue {
-    addBrowserInfo?: boolean;
     title: string;
     body: string;
+    addBrowserInfo?: boolean;
 }
 
-export interface GitHubIssue extends Issue {
-    repository: string;
-}
-
-export interface Dhis2Options {
-    issue?: Issue;
+export interface Dhis2Options extends Issue {
     sendToDhis2UserGroups?: string[];
 }
 
-export interface GitHubOptions {
+export interface GitHubOptions extends Issue {
+    repository: string;
     apiUrl?: string;
     userToken?: string[];
-    issue?: GitHubIssue;
     screenshot?: UploadScreenshot;
 }
 

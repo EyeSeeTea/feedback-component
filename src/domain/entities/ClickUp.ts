@@ -1,12 +1,11 @@
 /* https://clickup.com/api */
 
-export interface ClickUpOptions {
+import { Issue } from "./Feedback";
+
+export interface ClickUpOptions extends Issue {
     apiUrl?: string;
     listId: string;
-    title: string;
-    body: string;
     status?: string;
-    addBrowserInfo?: boolean;
 }
 
 export interface Task {
