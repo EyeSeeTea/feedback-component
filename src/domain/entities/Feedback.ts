@@ -44,7 +44,7 @@ export interface UploadScreenshot {
 }
 
 export interface LayoutOptions {
-    username?: string;
+    screenshotLabel?: string;
     descriptionTemplate?: string;
     buttonPosition?: ButtonPosition;
     showContact?: boolean;
