@@ -85,7 +85,7 @@ const stopCapture = (video: HTMLVideoElement) => {
     const tracks = video.srcObject?.getTracks();
     tracks?.forEach((track: { stop: () => void }) => track.stop());
 
-    // This is the only way to clean up a video stream in the browser so...
+    // This is the only way to clean up a video stream in the browser
     // eslint-disable-next-line no-param-reassign
     video.srcObject = null;
     video.remove();

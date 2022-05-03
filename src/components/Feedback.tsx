@@ -13,8 +13,7 @@ interface FeedbackProps {
     username?: string;
 }
 
-export const Feedback: React.FC<FeedbackProps> = React.memo(props => {
-    const { options, username } = props;
+export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username }) => {
     const [showDialog, { close: closeDialog, open: openDialog }] = useBooleanState(false);
     const [showSDialog, { close: closeSDialog, open: openSDialog }] = useBooleanState(false);
     const [contentSDialog, setContentSDialog] = useState("");
