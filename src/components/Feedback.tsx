@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import { Button, createTheme, ThemeProvider, styled } from "@material-ui/core";
+import { Button, createTheme, ThemeProvider, styled, ButtonProps } from "@material-ui/core";
 import { Feedback as FeedbackIcon } from "@material-ui/icons";
 import { indigo500 } from "material-ui/styles/colors";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useBooleanState } from "../hooks/useBoolean";
 import { ButtonPosition, FeedbackOptions } from "../domain/entities/Feedback";
-import { defaultOptions } from "../domain/entities/DefaultOptions";
-import i18n from "../locales";
 import { SubmitDialog } from "./SubmitDialog";
+import i18n from "../locales";
 
 interface FeedbackProps {
     options?: FeedbackOptions;
+    username?: string;
 }
 
 export const Feedback: React.FC<FeedbackProps> = React.memo(props => {
-    const { options } = props;
-    const config = options ?? defaultOptions;
+    const { options, username } = props;
     const [showDialog, { close: closeDialog, open: openDialog }] = useBooleanState(false);
     const [showSDialog, { close: closeSDialog, open: openSDialog }] = useBooleanState(false);
     const [contentSDialog, setContentSDialog] = useState("");
@@ -40,6 +39,7 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(props => {
         <ThemeProvider theme={theme}>
             <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-start"}>
                 <StyledButton
+                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-start"}
                     variant="contained"
                     color="primary"
                     endIcon={<FeedbackIcon />}
@@ -52,8 +52,9 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(props => {
                     open={showDialog}
                     onClose={closeDialog}
                     onSend={onSend}
-                    options={config.layoutOptions ?? {}}
-                    clickUp={config.clickUp}
+                    options={options?.layoutOptions}
+                    clickUp={options?.clickUp}
+                    username={username}
                 />
                 <SubmitDialog open={showSDialog} onClose={closeSDialog} content={contentSDialog} />
             </Container>
@@ -62,41 +63,46 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(props => {
 });
 
 interface ContainerProps {
-    buttonPosition?: ButtonPosition;
+    buttonPosition: ButtonPosition;
 }
 
-const Container = styled(
-    ({ buttonPosition, ...other }: ContainerProps & Omit<ContainerProps, keyof ContainerProps>) => (
-        <div {...other}></div>
-    )
-)({
+const Container = styled(({ buttonPosition: _buttonPosition, ...other }: ContainerProps) => (
+    <div {...other}></div>
+))({
     position: "fixed",
     zIndex: 1299,
-    top: ({ buttonPosition }: ContainerProps) =>
-        buttonPosition?.includes("left") || buttonPosition?.includes("right")
-            ? buttonPosition?.includes("start")
-                ? 100
-                : buttonPosition?.includes("end")
-                ? "calc(100vh - 100px)"
-                : "calc(50vh - 100px)"
-            : "unset",
-    bottom: ({ buttonPosition }: ContainerProps) =>
-        buttonPosition?.includes("bottom") ? 0 : "unset",
-    left: ({ buttonPosition }: ContainerProps) =>
-        buttonPosition?.includes("left")
-            ? 0
-            : buttonPosition?.includes("bottom") && buttonPosition?.includes("start")
+    top: ({ buttonPosition: btnPos }: ContainerProps) =>
+        (btnPos.includes("left") || btnPos.includes("right")) && !btnPos.includes("end")
+            ? btnPos.includes("start")
+                ? 200
+                : "50vh"
+            : undefined,
+    bottom: ({ buttonPosition: btnPos }: ContainerProps) => (btnPos.includes("bottom") ? 0 : 125),
+    left: ({ buttonPosition: btnPos }: ContainerProps) =>
+        btnPos.includes("left")
+            ? -67
+            : btnPos.includes("bottom") && btnPos.includes("start")
             ? 100
-            : "unset",
-    right: ({ buttonPosition }: ContainerProps) =>
-        buttonPosition?.includes("right")
-            ? 0
-            : buttonPosition?.includes("bottom") && buttonPosition?.includes("end")
+            : undefined,
+    right: ({ buttonPosition: btnPos }: ContainerProps) =>
+        btnPos.includes("right")
+            ? -67
+            : btnPos.includes("bottom") && btnPos.includes("end")
             ? 100
-            : "unset",
+            : undefined,
 });
 
-const StyledButton = styled(Button)({
+const StyledButton = styled(
+    ({ buttonPosition: _buttonPosition, ...other }: ContainerProps & ButtonProps) => (
+        <Button {...other}></Button>
+    )
+)({
+    transform: ({ buttonPosition: btnPos }: ContainerProps) =>
+        btnPos.includes("left")
+            ? "rotate(90deg)"
+            : btnPos.includes("right")
+            ? "rotate(-90deg)"
+            : undefined,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
 });
