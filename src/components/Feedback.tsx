@@ -9,8 +9,8 @@ import { SubmitDialog } from "./SubmitDialog";
 import i18n from "../locales";
 
 interface FeedbackProps {
-    options?: FeedbackOptions;
-    username?: string;
+    options: FeedbackOptions;
+    username: string;
 }
 
 export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username }) => {
