@@ -5,22 +5,25 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2022-05-03T08:32:41.523Z\n"
-"PO-Revision-Date: 2022-05-03T08:32:41.523Z\n"
+"POT-Creation-Date: 2022-05-06T11:48:35.554Z\n"
+"PO-Revision-Date: 2022-05-06T11:48:35.554Z\n"
 
 msgid "Send feedback"
 msgstr ""
 
-msgid "Thank you for your feedback"
+msgid "Thank you for your feedback."
 msgstr ""
 
-msgid "Sadly an error occured while sending your feedback. Please try again"
+msgid "Sadly an error occured while sending your feedback. Please try again."
 msgstr ""
 
 msgid "Title"
 msgstr ""
 
 msgid "Description"
+msgstr ""
+
+msgid "Include screenshot"
 msgstr ""
 
 msgid "I would like to be contacted"
@@ -51,14 +54,4 @@ msgid "Application Feedback"
 msgstr ""
 
 msgid " section."
-msgstr ""
-
-msgid "Include screenshot"
-msgstr ""
-
-msgid ""
-"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod delectus "
-"asperiores eius ratione reprehenderit maiores error harum quis quasi "
-"nesciunt deleniti, sapiente laborum facere consequuntur adipisci provident "
-"sed nulla quo."
 msgstr ""

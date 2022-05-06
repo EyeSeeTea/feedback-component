@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2022-05-03T08:32:41.523Z\n"
+"POT-Creation-Date: 2022-05-06T11:48:35.554Z\n"
 "PO-Revision-Date: 2019-02-14T11:21:26.165Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11,16 +11,19 @@ msgstr ""
 msgid "Send feedback"
 msgstr ""
 
-msgid "Thank you for your feedback"
+msgid "Thank you for your feedback."
 msgstr ""
 
-msgid "Sadly an error occured while sending your feedback. Please try again"
+msgid "Sadly an error occured while sending your feedback. Please try again."
 msgstr ""
 
 msgid "Title"
 msgstr ""
 
 msgid "Description"
+msgstr ""
+
+msgid "Include screenshot"
 msgstr ""
 
 msgid "I would like to be contacted"
@@ -53,16 +56,6 @@ msgstr ""
 #, fuzzy
 msgid " section."
 msgstr "Borrar selección"
-
-msgid "Include screenshot"
-msgstr ""
-
-msgid ""
-"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod delectus "
-"asperiores eius ratione reprehenderit maiores error harum quis quasi "
-"nesciunt deleniti, sapiente laborum facere consequuntur adipisci provident "
-"sed nulla quo."
-msgstr ""
 
 #~ msgid "Save"
 #~ msgstr "Guardar"
