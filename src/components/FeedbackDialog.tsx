@@ -19,22 +19,22 @@ import { useBooleanState } from "../hooks/useBoolean";
 import i18n from "../locales";
 import { HelpOutline } from "@material-ui/icons";
 import { Fields, LayoutOptions } from "../domain/entities/Feedback";
-import { screenshot, checkIfBrowserSupported } from "../data/screenshot";
-import { ClickUp } from "../data/clickup";
-import { ClickUpOptions } from "../domain/entities/ClickUp";
+import { checkIfBrowserSupported } from "../data/repositories/ScreenshotDefaultRepository";
+import { useAppContext } from "../contexts/AppContext";
 
 interface FeedbackDialogProps {
     open: boolean;
     options?: LayoutOptions;
-    clickUp?: ClickUpOptions;
-    username?: string;
+    repositories: Repositories;
     onClose: () => void;
     onSend: (content: string) => void;
 }
 
 export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
-    ({ open, options, clickUp, onClose, onSend, username }) => {
+    ({ open, options, onClose, onSend, repositories }) => {
+        const { compositionRoot } = useAppContext();
         const AgreementLabel: React.ReactNode = useMemo(getAgreementLabel, []);
+        const { dhis2: _dhis2, clickUp, github: _github } = repositories;
         const [includeScreenshot, { toggle: toggleScreenshot }] = useBooleanState(false);
         const [includeContact, { toggle: toggleContact }] = useBooleanState(false);
         const [acceptAgreement, { toggle: toggleAgreement }] = useBooleanState(false);
@@ -109,7 +109,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                 description: event =>
                     setInputs(inputs => ({
                         ...inputs,
-                        description: { value: event.target.value.trim(), isValid: true },
+                        description: { value: event.target.value, isValid: true },
                     })),
                 name: event =>
                     setInputs(inputs => ({
@@ -131,12 +131,10 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                 const clickup =
                     clickUp &&
                     (checkIfBrowserSupported() && includeScreenshot
-                        ? screenshot({ onCaptureStart: onClose })
+                        ? compositionRoot.screenshot
+                              .execute({ onCaptureStart: onClose })
                               .flatMap(screenshot =>
-                                  ClickUp(values, clickUp, {
-                                      username: username,
-                                      encodedImg: screenshot,
-                                  }).bimap(
+                                  compositionRoot.sendToClickUp.execute(values, screenshot).bimap(
                                       reqResult => reqResult,
                                       reqError => reqError.message
                                   )
@@ -147,9 +145,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                                       message: reqError,
                                   })
                               )
-                        : ClickUp(values, clickUp, {
-                              username: username,
-                          }));
+                        : compositionRoot.sendToClickUp.execute(values));
                 clickup?.run(
                     () => {
                         onClose();
@@ -165,7 +161,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                     }
                 );
             }
-        }, [includeScreenshot, clickUp, onClose, username, validate, valid, values, onSend]);
+        }, [includeScreenshot, clickUp, onClose, validate, valid, values, onSend]);
 
         return (
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" fullWidth>
@@ -173,103 +169,112 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                     {i18n.t("Send feedback")}
                 </StyledDialogTitle>
                 <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="title"
-                        type="text"
-                        label={i18n.t("Title")}
-                        value={inputs.title.value}
-                        onChange={inputsSetters.title}
-                        error={!inputs.title.isValid}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        margin="normal"
-                        name="description"
-                        type="text"
-                        label={i18n.t("Description")}
-                        value={inputs.description.value}
-                        onChange={inputsSetters.description}
-                        error={!inputs.description.isValid}
-                        fullWidth
-                        required
-                        multiline
-                    />
-                    <Wrapper>
-                        <Box display="flex" flexDirection="column">
-                            <FitControlLabel
-                                control={
-                                    <Checkbox
-                                        color="primary"
-                                        checked={includeScreenshot}
-                                        onChange={toggleScreenshot}
-                                    />
-                                }
-                                label={
-                                    options?.screenshotLabel ? (
-                                        <ScreenshotLabel text={options?.screenshotLabel} />
-                                    ) : (
-                                        i18n.t("Include screenshot")
-                                    )
-                                }
-                            />
-                            {options?.showContact && (
+                    <form noValidate autoComplete="off">
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            name="title"
+                            type="text"
+                            label={i18n.t("Title")}
+                            value={inputs.title.value}
+                            onChange={inputsSetters.title}
+                            error={!inputs.title.isValid}
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="normal"
+                            name="description"
+                            type="text"
+                            label={i18n.t("Description")}
+                            value={inputs.description.value}
+                            onChange={inputsSetters.description}
+                            error={!inputs.description.isValid}
+                            minRows={3}
+                            fullWidth
+                            required
+                            multiline
+                        />
+                        <Wrapper>
+                            <Box display="flex" flexDirection="column">
                                 <FitControlLabel
                                     control={
                                         <Checkbox
                                             color="primary"
-                                            checked={includeContact}
-                                            onChange={toggleContact}
+                                            checked={includeScreenshot}
+                                            onChange={toggleScreenshot}
                                         />
                                     }
-                                    label={i18n.t("I would like to be contacted")}
+                                    label={
+                                        options?.screenshotLabel ? (
+                                            <ScreenshotLabel text={options?.screenshotLabel} />
+                                        ) : (
+                                            i18n.t("Include screenshot")
+                                        )
+                                    }
                                 />
-                            )}
-                        </Box>
-                        {options?.showContact && includeContact && (
-                            <Box display="flex">
-                                <GrownTextField
-                                    margin="dense"
-                                    name="name"
-                                    type="text"
-                                    label={i18n.t("Name")}
-                                    value={inputs.name.value}
-                                    onChange={inputsSetters.name}
-                                    error={!inputs.name.isValid}
-                                    required
-                                />
-                                <GrownTextField
-                                    margin="dense"
-                                    name="email"
-                                    type="text"
-                                    label={i18n.t("Email")}
-                                    value={inputs.email.value}
-                                    onChange={inputsSetters.email}
-                                    error={!inputs.email.isValid}
-                                    required
-                                />
+                                {options?.showContact && (
+                                    <FitControlLabel
+                                        control={
+                                            <Checkbox
+                                                color="primary"
+                                                checked={includeContact}
+                                                onChange={toggleContact}
+                                            />
+                                        }
+                                        label={i18n.t("I would like to be contacted")}
+                                    />
+                                )}
                             </Box>
-                        )}
-                    </Wrapper>
-                    <StyledDivider />
-                    <Wrapper>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    color="primary"
-                                    checked={acceptAgreement}
-                                    onChange={toggleAgreement}
-                                    required
-                                />
-                            }
-                            label={AgreementLabel}
-                        />
-                    </Wrapper>
+                            {options?.showContact && includeContact && (
+                                <Box display="flex">
+                                    <GrownTextField
+                                        margin="dense"
+                                        name="name"
+                                        type="text"
+                                        label={i18n.t("Name")}
+                                        value={inputs.name.value}
+                                        onChange={inputsSetters.name}
+                                        error={!inputs.name.isValid}
+                                        required
+                                    />
+                                    <GrownTextField
+                                        margin="dense"
+                                        name="email"
+                                        type="text"
+                                        label={i18n.t("Email")}
+                                        value={inputs.email.value}
+                                        onChange={inputsSetters.email}
+                                        error={!inputs.email.isValid}
+                                        required
+                                    />
+                                </Box>
+                            )}
+                        </Wrapper>
+                        <StyledDivider />
+                        <Wrapper>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        color="primary"
+                                        checked={acceptAgreement}
+                                        onChange={toggleAgreement}
+                                        required
+                                    />
+                                }
+                                label={AgreementLabel}
+                            />
+                        </Wrapper>
+                    </form>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>{i18n.t("Cancel")}</Button>
-                    <Button onClick={submit} color="primary" disabled={!acceptAgreement}>
+                    <Button
+                        type="submit"
+                        onClick={submit}
+                        color="primary"
+                        disabled={!acceptAgreement}
+                    >
                         {i18n.t("Send")}
                     </Button>
                 </DialogActions>
@@ -287,27 +292,26 @@ interface InputsSetters {
     email: SetInputValue;
 }
 
+interface Input {
+    value: string;
+    isValid?: boolean;
+}
+
 interface Inputs {
-    title: {
-        value: string;
-        isValid?: boolean;
-    };
-    description: {
-        value: string;
-        isValid?: boolean;
-    };
-    name: {
-        value: string;
-        isValid?: boolean;
-    };
-    email: {
-        value: string;
-        isValid?: boolean;
-    };
+    title: Input;
+    description: Input;
+    name: Input;
+    email: Input;
 }
 
 interface ScreenshotLabelProps {
     text: string;
+}
+
+interface Repositories {
+    dhis2?: object;
+    github?: object;
+    clickUp?: object;
 }
 
 const ppUrls = {

@@ -10,9 +10,11 @@ export interface Fields {
 }
 
 export interface FeedbackOptions {
-    dhis2?: Dhis2Options;
-    github?: GitHubOptions;
-    clickUp?: ClickUpOptions;
+    repositories: {
+        dhis2?: Dhis2Options;
+        github?: GitHubOptions;
+        clickUp?: ClickUpOptions;
+    };
     layoutOptions?: LayoutOptions;
 }
 

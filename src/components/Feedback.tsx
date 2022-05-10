@@ -7,57 +7,58 @@ import { useBooleanState } from "../hooks/useBoolean";
 import { ButtonPosition, FeedbackOptions } from "../domain/entities/Feedback";
 import { SubmitDialog } from "./SubmitDialog";
 import i18n from "../locales";
+import { getCompositionRoot } from "../CompositionRoot";
+import { AppContext } from "../contexts/AppContext";
 
 interface FeedbackProps {
-    options?: FeedbackOptions;
+    options: FeedbackOptions;
     username?: string;
 }
 
 export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username }) => {
     const [showDialog, { close: closeDialog, open: openDialog }] = useBooleanState(false);
-    const [showSDialog, { close: closeSDialog, open: openSDialog }] = useBooleanState(false);
-    const [contentSDialog, setContentSDialog] = useState("");
+    const [contentSubmitDialog, setContentSubmitDialog] = useState("");
+    const [showSubmitDialog, { close: closeSubmitDialog, open: openSubmitDialog }] =
+        useBooleanState(false);
+    const appContext = { compositionRoot: getCompositionRoot(options, username) };
 
     const onSend = React.useCallback(
         content => {
-            openSDialog();
-            setContentSDialog(content);
+            openSubmitDialog();
+            setContentSubmitDialog(content);
         },
-        [openSDialog]
+        [openSubmitDialog]
     );
 
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: indigo500,
-            },
-        },
-    });
-
     return (
-        <ThemeProvider theme={theme}>
-            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
-                <StyledButton
-                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
-                    variant="contained"
-                    color="primary"
-                    endIcon={<FeedbackIcon />}
-                    onClick={openDialog}
-                    disableElevation
-                >
-                    {i18n.t("Send feedback")}
-                </StyledButton>
-                <FeedbackDialog
-                    open={showDialog}
-                    onClose={closeDialog}
-                    onSend={onSend}
-                    options={options?.layoutOptions}
-                    clickUp={options?.clickUp}
-                    username={username}
-                />
-                <SubmitDialog open={showSDialog} onClose={closeSDialog} content={contentSDialog} />
-            </Container>
-        </ThemeProvider>
+        <AppContext.Provider value={appContext}>
+            <ThemeProvider theme={theme}>
+                <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
+                    <StyledButton
+                        buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
+                        variant="contained"
+                        color="primary"
+                        endIcon={<FeedbackIcon />}
+                        onClick={openDialog}
+                        disableElevation
+                    >
+                        {i18n.t("Send feedback")}
+                    </StyledButton>
+                    <FeedbackDialog
+                        open={showDialog}
+                        onClose={closeDialog}
+                        onSend={onSend}
+                        options={options?.layoutOptions}
+                        clickUp={options?.repositories.clickUp}
+                    />
+                    <SubmitDialog
+                        open={showSubmitDialog}
+                        onClose={closeSubmitDialog}
+                        content={contentSubmitDialog}
+                    />
+                </Container>
+            </ThemeProvider>
+        </AppContext.Provider>
     );
 });
 
@@ -104,4 +105,12 @@ const StyledButton = styled(
             : undefined,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+});
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: indigo500,
+        },
+    },
 });
