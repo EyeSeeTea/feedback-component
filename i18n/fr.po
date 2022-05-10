@@ -1,11 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2022-05-09T09:22:28.222Z\n"
-=======
 "POT-Creation-Date: 2022-05-06T11:48:35.554Z\n"
->>>>>>> 9679c19c7d53f48dd962df273452aa0c4a27d110
 "PO-Revision-Date: 2019-02-14T11:21:26.165Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
