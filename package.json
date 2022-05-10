@@ -101,7 +101,7 @@
         "localize": "yarn extract-pot && yarn update-po && yarn localize-update",
         "localize-update": "d2-i18n-generate -n feedback-component -p ./i18n/ -o ./src/locales/",
         "update-po": "for pofile in i18n/*.po; do msgmerge --backup=off -U $pofile i18n/en.pot; done",
-        "prettify": "prettier src/*.ts src/**/*.{js,jsx,json,css,ts,tsx} --write",
+        "prettify": "prettier src/*.ts src/**/*.{js,json,ts,tsx} --write",
         "test": "jest",
         "prerelease": "yarn build",
         "release": "bash scripts/publish.sh"

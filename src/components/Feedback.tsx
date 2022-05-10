@@ -12,7 +12,7 @@ import { AppContext } from "../contexts/AppContext";
 
 interface FeedbackProps {
     options: FeedbackOptions;
-    username?: string;
+    username: string;
 }
 
 export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username }) => {
@@ -49,7 +49,7 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
                         onClose={closeDialog}
                         onSend={onSend}
                         options={options?.layoutOptions}
-                        clickUp={options?.repositories.clickUp}
+                        repositories={{ clickUp: options?.repositories.clickUp }}
                     />
                     <SubmitDialog
                         open={showSubmitDialog}

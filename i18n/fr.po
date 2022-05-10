@@ -1,7 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-05-09T09:22:28.222Z\n"
+=======
+"POT-Creation-Date: 2022-05-06T11:48:35.554Z\n"
+>>>>>>> 9679c19c7d53f48dd962df273452aa0c4a27d110
 "PO-Revision-Date: 2019-02-14T11:21:26.165Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,102 +57,6 @@ msgstr ""
 msgid "Application Feedback"
 msgstr ""
 
-#, fuzzy
 msgid " section."
-msgstr "Effacer la sélection"
+msgstr ""
 
-#~ msgid "Save"
-#~ msgstr "Enregistrer"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
-
-#~ msgid "Actions"
-#~ msgstr "Opérations"
-
-#~ msgid "There are {{total}} items selected in all pages."
-#~ msgstr "Il y a {{total}} éléments sélectionnés dans toutes les pages"
-
-#~ msgid "All {{total}} items on this page are selected."
-#~ msgstr "Tous les {{total}} éléments de cette page sont sélectionnés"
-
-#~ msgid "Select all {{total}} items in all pages"
-#~ msgstr "Sélectionnez tous les {{{total}}} éléments dans toutes les pages"
-
-#~ msgid "Hidden by filters"
-#~ msgstr "Caché par des filtres"
-
-#~ msgid "Selected"
-#~ msgstr "Sélectionné(s)"
-
-#~ msgid "Assign all"
-#~ msgstr "Assigner tout"
-
-#~ msgid "Remove all"
-#~ msgstr "Enlever tout"
-
-#~ msgid "R/W"
-#~ msgstr "Éditable"
-
-#~ msgid "Read"
-#~ msgstr "Lecture"
-
-#~ msgid "Private"
-#~ msgstr "Privé"
-
-#~ msgid "Metadata"
-#~ msgstr "Métadonnées"
-
-#~ msgid "Data"
-#~ msgstr "Données"
-
-#~ msgid "Search by name"
-#~ msgstr "Rechercher par nom"
-
-#~ msgid "Select all"
-#~ msgstr "Sélectionner tout"
-
-#~ msgid "Deselect all"
-#~ msgstr "Désélectionner tout"
-
-#~ msgid "Organisation unit group"
-#~ msgstr "Groupe de l'Unité d'Organisation"
-
-#~ msgid "Organisation unit level"
-#~ msgstr "Niveau de l'Unité d'Organisation"
-
-#~ msgid "Select"
-#~ msgstr "Sélectionner"
-
-#~ msgid "Deselect"
-#~ msgstr "Désélectionner"
-
-#~ msgid "For organisation units within"
-#~ msgstr "Pour les unités d'organisation au sein de"
-
-#~ msgid "For all organisation units"
-#~ msgstr "Pour toutes les unités d'organisation"
-
-#~ msgid "Remove"
-#~ msgstr "Enlever"
-
-#~ msgid "Help"
-#~ msgstr "Aide"
-
-#~ msgid "Previous"
-#~ msgstr "Précédent"
-
-#~ msgid "Next"
-#~ msgstr "Suivant"
-
-#~ msgid "There are {{count}} items selected ({{invisible}} on other pages)."
-#~ msgid_plural ""
-#~ "There are {{count}} items selected ({{invisible}} on other pages)."
-#~ msgstr[0] ""
-#~ "Il y a {{count}} élément sélectionné ({{invisible}} sur les autres pages)."
-#~ msgstr[1] ""
-#~ "Il y a {{count}} éléments sélectionnés ({{invisible}} sur les autres "
-#~ "pages)."
