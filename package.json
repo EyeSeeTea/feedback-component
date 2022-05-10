@@ -1,6 +1,6 @@
 {
     "name": "@eyeseetea/feedback-component",
-    "description": "Feedback component for DHIS2 apps",
+    "description": "Form for receiving feedback from user",
     "version": "0.0.1",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
