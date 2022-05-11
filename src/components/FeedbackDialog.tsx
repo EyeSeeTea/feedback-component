@@ -161,7 +161,17 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                     }
                 );
             }
-        }, [includeScreenshot, clickUp, onClose, validate, valid, values, onSend]);
+        }, [
+            includeScreenshot,
+            compositionRoot.screenshot,
+            compositionRoot.sendToClickUp,
+            clickUp,
+            onClose,
+            validate,
+            valid,
+            values,
+            onSend,
+        ]);
 
         return (
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" fullWidth>
