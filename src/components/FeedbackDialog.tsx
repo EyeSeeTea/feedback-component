@@ -62,18 +62,18 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         const validate = React.useCallback(() => {
             setInputs(inputs => ({
                 ...inputs,
-                title: { ...inputs.title, isValid: inputs.title.value.length > 0 },
+                title: { ...inputs.title, isValid: inputs.title.value.trim().length > 0 },
                 description: {
                     ...inputs.description,
-                    isValid: inputs.description.value.length > 0,
+                    isValid: inputs.description.value.trim().length > 0,
                 },
                 ...(includeContact && {
-                    name: { ...inputs.name, isValid: inputs.name.value.length > 0 },
+                    name: { ...inputs.name, isValid: inputs.name.value.trim().length > 0 },
                     email: {
                         ...inputs.email,
                         isValid:
                             /^([a-zA-Z0-9_.+-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
-                                inputs.email.value
+                                inputs.email.value.trim()
                             ) && inputs.email.value.length > 0,
                     },
                 }),
@@ -104,7 +104,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                 title: event =>
                     setInputs(inputs => ({
                         ...inputs,
-                        title: { value: event.target.value.trim(), isValid: true },
+                        title: { value: event.target.value, isValid: true },
                     })),
                 description: event =>
                     setInputs(inputs => ({
@@ -114,12 +114,12 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                 name: event =>
                     setInputs(inputs => ({
                         ...inputs,
-                        name: { value: event.target.value.trim(), isValid: true },
+                        name: { value: event.target.value, isValid: true },
                     })),
                 email: event =>
                     setInputs(inputs => ({
                         ...inputs,
-                        email: { value: event.target.value.trim(), isValid: true },
+                        email: { value: event.target.value, isValid: true },
                     })),
             }),
             []
