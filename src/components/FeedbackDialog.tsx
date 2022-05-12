@@ -14,7 +14,7 @@ import {
     Tooltip,
     Divider,
 } from "@material-ui/core";
-import { white, indigo500 } from "material-ui/styles/colors";
+import { white, orange500 } from "material-ui/styles/colors";
 import { useBooleanState } from "../hooks/useBoolean";
 import i18n from "../locales";
 import { HelpOutline } from "@material-ui/icons";
@@ -361,7 +361,7 @@ const getAgreementLabel = () => (
 );
 
 export const StyledDialogTitle = styled(DialogTitle)({
-    background: indigo500,
+    background: orange500,
     color: white,
 });
 
@@ -372,7 +372,7 @@ const Wrapper = styled("div")({
 
 const HelpOutlineIcon = styled(HelpOutline)({
     marginLeft: 4,
-    fill: indigo500,
+    fill: orange500,
     width: "0.875em",
     height: "0.875em",
 });

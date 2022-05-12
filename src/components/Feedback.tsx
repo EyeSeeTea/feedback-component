@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, createTheme, ThemeProvider, styled, ButtonProps } from "@material-ui/core";
 import { Feedback as FeedbackIcon } from "@material-ui/icons";
-import { indigo500 } from "material-ui/styles/colors";
+import { white, orange500 } from "material-ui/styles/colors";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useBooleanState } from "../hooks/useBoolean";
 import { ButtonPosition, FeedbackOptions } from "../domain/entities/Feedback";
@@ -88,7 +88,7 @@ const Container = styled(({ buttonPosition: _buttonPosition, ...other }: Contain
         btnPos.includes("right")
             ? -67
             : btnPos.includes("bottom") && btnPos.includes("end")
-            ? 100
+            ? 200
             : undefined,
 });
 
@@ -105,12 +105,13 @@ const StyledButton = styled(
             : undefined,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    color: white,
 });
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: indigo500,
+            main: orange500,
         },
     },
 });
