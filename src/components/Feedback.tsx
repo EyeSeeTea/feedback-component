@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Button, createTheme, ThemeProvider, styled, ButtonProps } from "@material-ui/core";
+import { Button, styled, ButtonProps } from "@material-ui/core";
 import { Feedback as FeedbackIcon } from "@material-ui/icons";
-import { white, orange500 } from "material-ui/styles/colors";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useBooleanState } from "../hooks/useBoolean";
 import { ButtonPosition, FeedbackOptions } from "../domain/entities/Feedback";
 import { SubmitDialog } from "./SubmitDialog";
-import i18n from "../locales";
 import { getCompositionRoot } from "../CompositionRoot";
 import { AppContext } from "../contexts/AppContext";
+import theme from "./utils/fakeTheme";
+import i18n from "../locales";
 
 interface FeedbackProps {
     options: FeedbackOptions;
@@ -32,32 +32,30 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
 
     return (
         <AppContext.Provider value={appContext}>
-            <ThemeProvider theme={theme}>
-                <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
-                    <StyledButton
-                        buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<FeedbackIcon />}
-                        onClick={openDialog}
-                        disableElevation
-                    >
-                        {i18n.t("Send feedback")}
-                    </StyledButton>
-                    <FeedbackDialog
-                        open={showDialog}
-                        onClose={closeDialog}
-                        onSend={onSend}
-                        options={options?.layoutOptions}
-                        repositories={{ clickUp: options?.repositories.clickUp }}
-                    />
-                    <SubmitDialog
-                        open={showSubmitDialog}
-                        onClose={closeSubmitDialog}
-                        content={contentSubmitDialog}
-                    />
-                </Container>
-            </ThemeProvider>
+            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
+                <StyledButton
+                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
+                    variant="contained"
+                    color="primary"
+                    endIcon={<FeedbackIcon />}
+                    onClick={openDialog}
+                    disableElevation
+                >
+                    {i18n.t("Send feedback")}
+                </StyledButton>
+                <FeedbackDialog
+                    open={showDialog}
+                    onClose={closeDialog}
+                    onSend={onSend}
+                    options={options?.layoutOptions}
+                    repositories={{ clickUp: options?.repositories.clickUp }}
+                />
+                <SubmitDialog
+                    open={showSubmitDialog}
+                    onClose={closeSubmitDialog}
+                    content={contentSubmitDialog}
+                />
+            </Container>
         </AppContext.Provider>
     );
 });
@@ -90,6 +88,7 @@ const Container = styled(({ buttonPosition: _buttonPosition, ...other }: Contain
             : btnPos.includes("bottom") && btnPos.includes("end")
             ? 200
             : undefined,
+    ...theme.root,
 });
 
 const StyledButton = styled(
@@ -105,13 +104,4 @@ const StyledButton = styled(
             : undefined,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    color: white,
-});
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: orange500,
-        },
-    },
 });

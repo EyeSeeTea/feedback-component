@@ -1,7 +1,7 @@
-import { Dialog, DialogContent, DialogContentText, styled } from "@material-ui/core";
 import React from "react";
+import { DialogContent, DialogContentText, DialogTitle, styled } from "@material-ui/core";
+import { ThemedDialog } from "./FeedbackDialog";
 import i18n from "../locales";
-import { StyledDialogTitle } from "./FeedbackDialog";
 
 interface SubmitDialogProps {
     open: boolean;
@@ -11,12 +11,12 @@ interface SubmitDialogProps {
 
 export const SubmitDialog: React.FC<SubmitDialogProps> = React.memo(
     ({ open, onClose, content }) => (
-        <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-            <StyledDialogTitle id="form-dialog-title">{i18n.t("Send feedback")}</StyledDialogTitle>
+        <ThemedDialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{i18n.t("Send feedback")}</DialogTitle>
             <StyledDialogContent>
                 <DialogContentText>{content}</DialogContentText>
             </StyledDialogContent>
-        </Dialog>
+        </ThemedDialog>
     )
 );
 

@@ -14,13 +14,13 @@ import {
     Tooltip,
     Divider,
 } from "@material-ui/core";
-import { white, orange500 } from "material-ui/styles/colors";
-import { useBooleanState } from "../hooks/useBoolean";
-import i18n from "../locales";
 import { HelpOutline } from "@material-ui/icons";
+import { useBooleanState } from "../hooks/useBoolean";
 import { Fields, LayoutOptions } from "../domain/entities/Feedback";
 import { checkIfBrowserSupported } from "../data/repositories/ScreenshotDefaultRepository";
 import { useAppContext } from "../contexts/AppContext";
+import theme from "./utils/fakeTheme";
+import i18n from "../locales";
 
 interface FeedbackDialogProps {
     open: boolean;
@@ -174,10 +174,13 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         ]);
 
         return (
-            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" fullWidth>
-                <StyledDialogTitle id="form-dialog-title">
-                    {i18n.t("Send feedback")}
-                </StyledDialogTitle>
+            <ThemedDialog
+                open={open}
+                onClose={onClose}
+                aria-labelledby="form-dialog-title"
+                fullWidth
+            >
+                <DialogTitle id="form-dialog-title">{i18n.t("Send feedback")}</DialogTitle>
                 <DialogContent>
                     <form noValidate autoComplete="off">
                         <TextField
@@ -288,7 +291,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                         {i18n.t("Send")}
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </ThemedDialog>
         );
     }
 );
@@ -341,7 +344,7 @@ const ScreenshotLabel: React.FC<ScreenshotLabelProps> = React.memo(({ text }) =>
     <Box display="flex" alignItems="center">
         {i18n.t("Include screenshot")}
         <Tooltip title={text}>
-            <HelpOutlineIcon />
+            <HelpOutlineIcon color="primary" />
         </Tooltip>
     </Box>
 ));
@@ -360,19 +363,15 @@ const getAgreementLabel = () => (
     </>
 );
 
-export const StyledDialogTitle = styled(DialogTitle)({
-    background: orange500,
-    color: white,
-});
-
 const Wrapper = styled("div")({
     marginTop: 16,
     marginBottom: 16,
 });
 
+export const ThemedDialog = styled(Dialog)({ ...theme.presentation });
+
 const HelpOutlineIcon = styled(HelpOutline)({
     marginLeft: 4,
-    fill: orange500,
     width: "0.875em",
     height: "0.875em",
 });
