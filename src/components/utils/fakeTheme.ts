@@ -42,6 +42,7 @@ export function createFakeTheme(theme: ThemeOptions): { root?: CSSRule; presenta
     const styles = createStyles(palette.primary);
     const root: CSSRule = {
         ".MuiButton-containedPrimary": styles.containedPrimary,
+        ".MuiButton-containedPrimary:hover": styles.containedPrimaryHover,
         ".MuiTypography-colorPrimary": styles.textPrimary,
     };
     const presentation: CSSRule = {
