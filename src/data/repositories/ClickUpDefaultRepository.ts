@@ -1,5 +1,5 @@
 import { ClickUpOptions, Task } from "../../domain/entities/ClickUp";
-import { Fields } from "../../domain/entities/Feedback";
+import { UserFeedback } from "../../domain/entities/Feedback";
 import { ClickUpRepository } from "../../domain/repositories/ClickUpRepository";
 import { fromPromise, Future } from "../entities/future";
 import { request, RequestError, RequestResult } from "../entities/future-axios";
@@ -16,22 +16,23 @@ export class ClickUpDefaultRepository implements ClickUpRepository {
     }
 
     sendToClickUp(
-        fields: Fields,
+        userFeedback: UserFeedback,
         encodedImg?: string | undefined
     ): Future<RequestError, RequestResult<Task>> {
         return this.options
-            ? this.createTask(getPayload(fields, this.options, this.username)).flatMap(request =>
-                  encodedImg
-                      ? this.attachFileToTask(request.data.id, encodedImg).bimap(
-                            (reqResult): RequestResult<Task> => ({
-                                ...reqResult,
-                                data: { ...request.data, file: reqResult.data },
-                            }),
-                            reqError => ({
-                                message: reqError,
-                            })
-                        )
-                      : Future.success(request)
+            ? this.createTask(getPayload(userFeedback, this.options, this.username)).flatMap(
+                  request =>
+                      encodedImg
+                          ? this.attachFileToTask(request.data.id, encodedImg).bimap(
+                                (reqResult): RequestResult<Task> => ({
+                                    ...reqResult,
+                                    data: { ...request.data, file: reqResult.data },
+                                }),
+                                reqError => ({
+                                    message: reqError,
+                                })
+                            )
+                          : Future.success(request)
               )
             : Future.error({ message: "ClickUp Options not defined" });
     }
@@ -99,19 +100,27 @@ function interpolate(
             "- Platform: " + browser.platform,
             "",
         ];*/
-function getPayload(fields: Fields, options: ClickUpOptions, username?: string): Payload {
-    const contact = fields.contact
-        ? `Contact info: ${fields.contact.name} (${fields.contact.email})`
+function getPayload(
+    userFeedback: UserFeedback,
+    options: ClickUpOptions,
+    username?: string
+): Payload {
+    const contact = userFeedback.contact
+        ? `Contact info: ${userFeedback.contact.name} (${userFeedback.contact.email})`
         : "";
-    const body = ["## User report", contact, "URL: " + document.URL, "", fields.description].join(
-        "\n"
-    );
+    const body = [
+        "## User report",
+        contact,
+        "URL: " + document.URL,
+        "",
+        userFeedback.description,
+    ].join("\n");
 
     const bodyNamespace = { body, username: username ?? "" };
     const description = options?.body ? interpolate(options.body, bodyNamespace) : body;
 
     return {
-        name: interpolate(options.title, { title: fields.title }),
+        name: interpolate(options.title, { title: userFeedback.title }),
         markdown_description: description,
         assignees: [],
         tags: ["feedback-component"],

@@ -1,6 +1,6 @@
 import { ClickUpOptions } from "./ClickUp";
 
-export interface Fields {
+export interface UserFeedback {
     title: string;
     description: string;
     contact?: {

@@ -40,17 +40,18 @@ export class ScreenshotDefaultRepository implements ScreenshotRepository {
     };
 }
 
-const sleep = (timeoutInMs = 300) =>
-    new Promise(r => {
+function sleep(timeoutInMs = 300) {
+    return new Promise(r => {
         setTimeout(r, timeoutInMs);
     });
+}
 
-const waitForFocus = async (result: MediaStream): Promise<MediaStream> => {
+async function waitForFocus(result: MediaStream): Promise<MediaStream> {
     await sleep();
     return document.hasFocus() ? result : waitForFocus(result);
-};
+}
 
-const createVideoElementToCaptureFrames = (mediaStream: MediaStream) => {
+function createVideoElementToCaptureFrames(mediaStream: MediaStream) {
     const video = document.createElement("video");
     video.autoplay = true;
     video.muted = true;
@@ -61,23 +62,31 @@ const createVideoElementToCaptureFrames = (mediaStream: MediaStream) => {
         "position:fixed;top:0;left:0;pointer-events:none;visibility:hidden;"
     );
     return video;
-};
+}
 
-const paintVideoFrameOnCanvas = (video: HTMLVideoElement) => {
-    const videoTrackSettings = (video.srcObject as MediaStream).getTracks()[0].getSettings();
+function paintVideoFrameOnCanvas(video: HTMLVideoElement) {
+    if (!(video.srcObject && isMediaStream(video.srcObject))) throw new Error("Not a MediaStream");
+    const videoTrackSettings = video.srcObject.getTracks()[0].getSettings();
     const canvas = document.createElement("canvas");
     canvas.width = videoTrackSettings?.width ?? 0;
     canvas.height = videoTrackSettings?.height ?? 0;
     const ctx = canvas.getContext("2d");
     ctx?.drawImage(video, 0, 0);
     return canvas;
-};
+}
 
-const stopCapture = (video: HTMLVideoElement) => {
-    const tracks = (video.srcObject as MediaStream).getTracks();
+function stopCapture(video: HTMLVideoElement) {
+    if (!(video.srcObject && isMediaStream(video.srcObject))) throw new Error("Not a MediaStream");
+    const tracks = video.srcObject.getTracks();
     tracks?.forEach((track: { stop: () => void }) => track.stop());
     video.srcObject = null;
     video.remove();
-};
+}
 
-export const checkIfBrowserSupported = () => Boolean(navigator.mediaDevices?.getDisplayMedia);
+export function checkIfBrowserSupported() {
+    return Boolean(navigator.mediaDevices?.getDisplayMedia);
+}
+
+function isMediaStream(provider: MediaProvider): provider is MediaStream {
+    return "getTracks" in provider;
+}

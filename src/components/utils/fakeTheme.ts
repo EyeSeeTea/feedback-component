@@ -17,16 +17,17 @@ function isSimplePaletteColorOptions(
     return "main" in colorOptions;
 }
 
-function primaryStyles(colorOptions: SimplePaletteColorOptions) {
+function createStyles(colorOptions: SimplePaletteColorOptions) {
     return {
-        backgroundColor: colorOptions.main,
-        color: colorOptions.contrastText,
-    };
-}
-
-function svgIconStyles(colorOptions: SimplePaletteColorOptions): CSSProperties {
-    return {
-        fill: colorOptions.main,
+        containedPrimary: {
+            backgroundColor: colorOptions.main,
+            color: colorOptions.contrastText,
+        },
+        borderPrimary: { borderColor: colorOptions.main },
+        textPrimary: {
+            color: colorOptions.main,
+        },
+        fillPrimary: { fill: colorOptions.main },
     };
 }
 
@@ -37,13 +38,19 @@ function onParent(key: string, ...parent: string[]) {
 export function createFakeTheme(theme: ThemeOptions): { root?: CSSRule; presentation?: CSSRule } {
     const { palette } = theme;
     if (!(palette?.primary && isSimplePaletteColorOptions(palette.primary))) return {};
-    const primary: CSSProperties = primaryStyles(palette.primary);
+    const styles = createStyles(palette.primary);
     const root: CSSRule = {
-        ".MuiButton-containedPrimary": primary,
+        ".MuiButton-containedPrimary": styles.containedPrimary,
+        ".MuiTypography-colorPrimary": styles.textPrimary,
     };
     const presentation: CSSRule = {
-        ".MuiDialogTitle-root": primary,
-        ".MuiSvgIcon-colorPrimary": svgIconStyles(palette.primary),
+        ".MuiDialogTitle-root": styles.containedPrimary,
+        ".MuiCheckbox-colorPrimary.Mui-checked": styles.textPrimary,
+        ".MuiTypography-colorPrimary": styles.textPrimary,
+        ".MuiButton-textPrimary:not(.Mui-disabled)": styles.textPrimary,
+        ".MuiInput-underline:after": styles.borderPrimary,
+        ".MuiSvgIcon-colorPrimary": styles.fillPrimary,
+        ".MuiFormLabel-root.Mui-focused": styles.textPrimary,
     };
 
     return {

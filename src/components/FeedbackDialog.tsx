@@ -16,11 +16,20 @@ import {
 } from "@material-ui/core";
 import { HelpOutline } from "@material-ui/icons";
 import { useBooleanState } from "../hooks/useBoolean";
-import { Fields, LayoutOptions } from "../domain/entities/Feedback";
+import { LayoutOptions } from "../domain/entities/Feedback";
 import { checkIfBrowserSupported } from "../data/repositories/ScreenshotDefaultRepository";
 import { useAppContext } from "../contexts/AppContext";
 import theme from "./utils/fakeTheme";
 import i18n from "../locales";
+import {
+    initialUserFeedback,
+    initialValidation,
+    isValid,
+    toUserFeedback,
+    UserFeedbackViewModel,
+    validate,
+    Validation,
+} from "./FeedbackViewModel";
 
 interface FeedbackDialogProps {
     open: boolean;
@@ -32,101 +41,49 @@ interface FeedbackDialogProps {
 
 export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
     ({ open, options, onClose, onSend, repositories }) => {
-        const { compositionRoot } = useAppContext();
         const AgreementLabel: React.ReactNode = useMemo(getAgreementLabel, []);
+        const { compositionRoot } = useAppContext();
         const { dhis2: _dhis2, clickUp, github: _github } = repositories;
         const [includeScreenshot, { toggle: toggleScreenshot }] = useBooleanState(false);
         const [includeContact, { toggle: toggleContact }] = useBooleanState(false);
         const [acceptAgreement, { toggle: toggleAgreement }] = useBooleanState(false);
-        const [inputs, setInputs] = useState<Inputs>({
-            title: { value: "", isValid: true },
-            description: {
-                value: options?.descriptionTemplate ?? "",
-                isValid: true,
-            },
-            name: { value: "", isValid: true },
-            email: { value: "", isValid: true },
-        });
-
-        const values: Fields = React.useMemo(
-            () => ({
-                title: inputs.title.value,
-                description: inputs.description.value,
-                contact: includeContact
-                    ? { name: inputs.name.value, email: inputs.email.value }
-                    : undefined,
-            }),
-            [inputs, includeContact]
+        const [validation, setValidation] = useState<Validation>(initialValidation);
+        const [userFeedback, setUserFeedback] = useState<UserFeedbackViewModel>(
+            initialUserFeedback(options?.descriptionTemplate)
         );
 
-        const validate = React.useCallback(() => {
-            setInputs(inputs => ({
-                ...inputs,
-                title: { ...inputs.title, isValid: inputs.title.value.trim().length > 0 },
-                description: {
-                    ...inputs.description,
-                    isValid: inputs.description.value.trim().length > 0,
-                },
-                ...(includeContact && {
-                    name: { ...inputs.name, isValid: inputs.name.value.trim().length > 0 },
-                    email: {
-                        ...inputs.email,
-                        isValid:
-                            /^([a-zA-Z0-9_.+-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
-                                inputs.email.value.trim()
-                            ) && inputs.email.value.length > 0,
-                    },
-                }),
-            }));
-        }, [includeContact]);
-
-        const valid = React.useMemo(
-            () =>
-                !!(
-                    (!includeContact && inputs.title.isValid && inputs.description.isValid) ||
-                    (includeContact &&
-                        inputs.title.isValid &&
-                        inputs.description.isValid &&
-                        inputs.name.isValid &&
-                        inputs.email.isValid)
-                ),
-            [
-                inputs.title.isValid,
-                inputs.description.isValid,
-                inputs.name.isValid,
-                inputs.email.isValid,
-                includeContact,
-            ]
+        const onInputChange = React.useCallback(
+            (key: keyof UserFeedbackViewModel, value: string) => {
+                setUserFeedback(userFeedback => ({
+                    ...userFeedback,
+                    [key]: value,
+                }));
+                setValidation(validation => ({ ...validation, [key]: true }));
+            },
+            []
         );
 
         const inputsSetters: InputsSetters = React.useMemo(
             () => ({
-                title: event =>
-                    setInputs(inputs => ({
-                        ...inputs,
-                        title: { value: event.target.value, isValid: true },
-                    })),
-                description: event =>
-                    setInputs(inputs => ({
-                        ...inputs,
-                        description: { value: event.target.value, isValid: true },
-                    })),
-                name: event =>
-                    setInputs(inputs => ({
-                        ...inputs,
-                        name: { value: event.target.value, isValid: true },
-                    })),
-                email: event =>
-                    setInputs(inputs => ({
-                        ...inputs,
-                        email: { value: event.target.value, isValid: true },
-                    })),
+                title: event => onInputChange("title", event.target.value),
+                description: event => onInputChange("description", event.target.value),
+                name: event => onInputChange("name", event.target.value),
+                email: event => onInputChange("email", event.target.value),
             }),
-            []
+            [onInputChange]
+        );
+
+        const values = React.useMemo(
+            () => toUserFeedback(userFeedback, { includeContact }),
+            [userFeedback, includeContact]
+        );
+        const valid = React.useMemo(
+            () => isValid(validation, { includeContact }),
+            [userFeedback, includeContact]
         );
 
         const submit = useCallback(() => {
-            validate();
+            setValidation(validate(userFeedback, { includeContact }));
             if (valid) {
                 const clickup =
                     clickUp &&
@@ -162,14 +119,14 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                 );
             }
         }, [
+            includeContact,
+            userFeedback,
+            validation,
             includeScreenshot,
             compositionRoot.screenshot,
             compositionRoot.sendToClickUp,
             clickUp,
             onClose,
-            validate,
-            valid,
-            values,
             onSend,
         ]);
 
@@ -189,9 +146,9 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                             name="title"
                             type="text"
                             label={i18n.t("Title")}
-                            value={inputs.title.value}
+                            value={userFeedback.title}
                             onChange={inputsSetters.title}
-                            error={!inputs.title.isValid}
+                            error={!validation.title}
                             fullWidth
                             required
                         />
@@ -200,9 +157,9 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                             name="description"
                             type="text"
                             label={i18n.t("Description")}
-                            value={inputs.description.value}
+                            value={userFeedback.description}
                             onChange={inputsSetters.description}
-                            error={!inputs.description.isValid}
+                            error={!validation.description}
                             minRows={3}
                             fullWidth
                             required
@@ -246,9 +203,9 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                                         name="name"
                                         type="text"
                                         label={i18n.t("Name")}
-                                        value={inputs.name.value}
+                                        value={userFeedback.name}
                                         onChange={inputsSetters.name}
-                                        error={!inputs.name.isValid}
+                                        error={!validation.name}
                                         required
                                     />
                                     <GrownTextField
@@ -256,9 +213,9 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                                         name="email"
                                         type="text"
                                         label={i18n.t("Email")}
-                                        value={inputs.email.value}
+                                        value={userFeedback.email}
                                         onChange={inputsSetters.email}
-                                        error={!inputs.email.isValid}
+                                        error={!validation.email}
                                         required
                                     />
                                 </Box>
@@ -303,18 +260,6 @@ interface InputsSetters {
     description: SetInputValue;
     name: SetInputValue;
     email: SetInputValue;
-}
-
-interface Input {
-    value: string;
-    isValid?: boolean;
-}
-
-interface Inputs {
-    title: Input;
-    description: Input;
-    name: Input;
-    email: Input;
 }
 
 interface ScreenshotLabelProps {
