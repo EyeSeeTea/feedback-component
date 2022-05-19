@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2022-05-09T09:22:28.222Z\n"
+"PO-Revision-Date: 2019-02-14T11:21:26.165Z\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Send feedback"
+msgstr ""
+
+msgid "Thank you for your feedback."
+msgstr ""
+
+msgid "Sadly an error occured while sending your feedback. Please try again."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Include screenshot"
+msgstr ""
+
+msgid "I would like to be contacted"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Send"
+msgstr ""
+
+msgid "I have read and accept the "
+msgstr ""
+
+msgid "EyeSeeTea S.L. Privacy Policy"
+msgstr ""
+
+msgid ", paying special attention to the "
+msgstr ""
+
+msgid "Application Feedback"
+msgstr ""
+
+msgid " section."
+msgstr ""
+
