@@ -79,7 +79,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         );
         const valid = React.useMemo(
             () => isValid(validation, { includeContact }),
-            [userFeedback, includeContact]
+            [includeContact, validation]
         );
 
         const submit = useCallback(() => {
@@ -121,13 +121,14 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         }, [
             includeContact,
             userFeedback,
-            validation,
             includeScreenshot,
             compositionRoot.screenshot,
             compositionRoot.sendToClickUp,
             clickUp,
             onClose,
             onSend,
+            valid,
+            values,
         ]);
 
         return (
