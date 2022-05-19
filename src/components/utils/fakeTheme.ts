@@ -5,7 +5,7 @@ import {
 import { CSSProperties } from "react";
 import _ from "lodash";
 import { ThemeOptions } from "@material-ui/core";
-import { orange500, white } from "material-ui/styles/colors";
+import { orange500, orange700, white } from "material-ui/styles/colors";
 
 export interface CSSRule {
     [k: string]: CSSProperties;
@@ -19,6 +19,7 @@ function isSimplePaletteColorOptions(
 
 function createStyles(colorOptions: SimplePaletteColorOptions) {
     return {
+        containedPrimaryHover: { backgroundColor: colorOptions.dark },
         containedPrimary: {
             backgroundColor: colorOptions.main,
             color: colorOptions.contrastText,
@@ -70,6 +71,7 @@ export default createFakeTheme({
     palette: {
         primary: {
             main: orange500,
+            dark: orange700,
             contrastText: white,
         },
     },
