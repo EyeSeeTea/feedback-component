@@ -1,6 +1,6 @@
 {
     "name": "@eyeseetea/feedback-component",
-    "description": "Form for receiving feedback from user",
+    "description": "Feedback component for React apps",
     "version": "0.0.2",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
