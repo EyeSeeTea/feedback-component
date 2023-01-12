@@ -53,6 +53,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
             initialUserFeedback(options?.descriptionTemplate)
         );
         const [isSubmitting, submittingActions] = useBooleanState(false);
+        const [isVisible, visibilityAction] = useBooleanState(true);
 
         const onInputChange = React.useCallback(
             (key: keyof UserFeedbackViewModel, value: string) => {
@@ -93,7 +94,10 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                     clickUp &&
                     (checkIfBrowserSupported() && includeScreenshot
                         ? compositionRoot.screenshot
-                              .execute({ onCaptureStart: onClose })
+                              .execute({
+                                  onCaptureStart: visibilityAction.close,
+                                  onCaptureEnd: visibilityAction.open,
+                              })
                               .flatMap(screenshot =>
                                   compositionRoot.sendToClickUp.execute(values, screenshot).bimap(
                                       reqResult => reqResult,
@@ -138,6 +142,8 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
             values,
             submittingActions,
         ]);
+
+        if (!isVisible) return null;
 
         return (
             <ThemedDialog
