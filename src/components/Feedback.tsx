@@ -43,13 +43,17 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
                 >
                     {i18n.t("Send feedback")}
                 </StyledButton>
-                <FeedbackDialog
-                    open={showDialog}
-                    onClose={closeDialog}
-                    onSend={onSend}
-                    options={options?.layoutOptions}
-                    repositories={{ clickUp: options?.repositories.clickUp }}
-                />
+
+                {showDialog && (
+                    <FeedbackDialog
+                        open={true}
+                        onClose={closeDialog}
+                        onSend={onSend}
+                        options={options?.layoutOptions}
+                        repositories={{ clickUp: options?.repositories.clickUp }}
+                    />
+                )}
+
                 <SubmitDialog
                     open={showSubmitDialog}
                     onClose={closeSubmitDialog}
