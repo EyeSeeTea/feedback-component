@@ -141,6 +141,7 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
             valid,
             values,
             submittingActions,
+            visibilityAction,
         ]);
 
         if (!isVisible) return null;
