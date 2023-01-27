@@ -40,16 +40,10 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
         <StylesProvider generateClassName={generateClassName}>
             <AppContext.Provider value={appContext}>
                 <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
-                    <StyledButton
-                        buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<FeedbackIcon />}
-                        onClick={openDialog}
-                        disableElevation
-                    >
-                        {i18n.t("Send feedback")}
-                    </StyledButton>
+                    <div style={style} onClick={openDialog}>
+                        {i18n.t("Send feedback")}{" "}
+                        <FeedbackIcon style={{ paddingTop: 2, marginLeft: 3 }} fontSize="small" />
+                    </div>
 
                     {showDialog && (
                         <FeedbackDialog
@@ -103,7 +97,8 @@ const Container = styled(({ buttonPosition: _buttonPosition, ...other }: Contain
     ...theme.root,
 });
 
-const StyledButton = styled(
+// MUI class name styles clashing, use a div for now.
+const _StyledButton = styled(
     ({ buttonPosition: _buttonPosition, ...other }: ContainerProps & ButtonProps) => (
         <Button {...other}></Button>
     )
@@ -119,3 +114,16 @@ const StyledButton = styled(
 });
 
 const generateClassName = createGenerateClassName({ productionPrefix: "fc" });
+
+const style: React.CSSProperties = {
+    padding: "2px 10px 2px 10px",
+    fontSize: "12px",
+    cursor: "pointer",
+    color: "#FFFFFF",
+    backgroundColor: "#ff9800",
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeight: 500,
+    lineHeight: 1.75,
+    letterSpacing: "0.02857em",
+    textTransform: "uppercase",
+};
