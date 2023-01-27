@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Button, styled, ButtonProps } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    ButtonProps,
+    createGenerateClassName,
+    StylesProvider,
+} from "@material-ui/core";
 import { Feedback as FeedbackIcon } from "@material-ui/icons";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useBooleanState } from "../hooks/useBoolean";
@@ -31,36 +37,38 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
     );
 
     return (
-        <AppContext.Provider value={appContext}>
-            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
-                <StyledButton
-                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
-                    variant="contained"
-                    color="primary"
-                    endIcon={<FeedbackIcon />}
-                    onClick={openDialog}
-                    disableElevation
-                >
-                    {i18n.t("Send feedback")}
-                </StyledButton>
+        <StylesProvider generateClassName={generateClassName}>
+            <AppContext.Provider value={appContext}>
+                <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
+                    <StyledButton
+                        buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
+                        variant="contained"
+                        color="primary"
+                        endIcon={<FeedbackIcon />}
+                        onClick={openDialog}
+                        disableElevation
+                    >
+                        {i18n.t("Send feedback")}
+                    </StyledButton>
 
-                {showDialog && (
-                    <FeedbackDialog
-                        open={true}
-                        onClose={closeDialog}
-                        onSend={onSend}
-                        options={options?.layoutOptions}
-                        repositories={{ clickUp: options?.repositories.clickUp }}
+                    {showDialog && (
+                        <FeedbackDialog
+                            open={true}
+                            onClose={closeDialog}
+                            onSend={onSend}
+                            options={options?.layoutOptions}
+                            repositories={{ clickUp: options?.repositories.clickUp }}
+                        />
+                    )}
+
+                    <SubmitDialog
+                        open={showSubmitDialog}
+                        onClose={closeSubmitDialog}
+                        content={contentSubmitDialog}
                     />
-                )}
-
-                <SubmitDialog
-                    open={showSubmitDialog}
-                    onClose={closeSubmitDialog}
-                    content={contentSubmitDialog}
-                />
-            </Container>
-        </AppContext.Provider>
+                </Container>
+            </AppContext.Provider>
+        </StylesProvider>
     );
 });
 
@@ -109,3 +117,5 @@ const StyledButton = styled(
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
 });
+
+const generateClassName = createGenerateClassName({ productionPrefix: "fc" });
