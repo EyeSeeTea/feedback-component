@@ -13,6 +13,7 @@ import {
     Box,
     Tooltip,
     Divider,
+    LinearProgress,
 } from "@material-ui/core";
 import { HelpOutline } from "@material-ui/icons";
 import { useBooleanState } from "../hooks/useBoolean";
@@ -51,6 +52,8 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         const [userFeedback, setUserFeedback] = useState<UserFeedbackViewModel>(
             initialUserFeedback(options?.descriptionTemplate)
         );
+        const [isSubmitting, submittingActions] = useBooleanState(false);
+        const [isVisible, visibilityAction] = useBooleanState(true);
 
         const onInputChange = React.useCallback(
             (key: keyof UserFeedbackViewModel, value: string) => {
@@ -85,11 +88,16 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
         const submit = useCallback(() => {
             setValidation(validate(userFeedback, { includeContact }));
             if (valid) {
+                submittingActions.open();
+
                 const clickup =
                     clickUp &&
                     (checkIfBrowserSupported() && includeScreenshot
                         ? compositionRoot.screenshot
-                              .execute({ onCaptureStart: onClose })
+                              .execute({
+                                  onCaptureStart: visibilityAction.close,
+                                  onCaptureEnd: visibilityAction.open,
+                              })
                               .flatMap(screenshot =>
                                   compositionRoot.sendToClickUp.execute(values, screenshot).bimap(
                                       reqResult => reqResult,
@@ -103,12 +111,15 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                                   })
                               )
                         : compositionRoot.sendToClickUp.execute(values));
+
                 clickup?.run(
                     () => {
+                        submittingActions.close();
                         onClose();
                         onSend(i18n.t("Thank you for your feedback."));
                     },
                     () => {
+                        submittingActions.close();
                         onClose();
                         onSend(
                             i18n.t(
@@ -129,7 +140,11 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
             onSend,
             valid,
             values,
+            submittingActions,
+            visibilityAction,
         ]);
+
+        if (!isVisible) return null;
 
         return (
             <ThemedDialog
@@ -238,6 +253,9 @@ export const FeedbackDialog: React.FC<FeedbackDialogProps> = React.memo(
                         </Wrapper>
                     </form>
                 </DialogContent>
+
+                {isSubmitting && <LinearProgress />}
+
                 <DialogActions>
                     <Button onClick={onClose}>{i18n.t("Cancel")}</Button>
                     <Button

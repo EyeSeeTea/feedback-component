@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Button, styled, ButtonProps } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    ButtonProps,
+    createGenerateClassName,
+    StylesProvider,
+} from "@material-ui/core";
 import { Feedback as FeedbackIcon } from "@material-ui/icons";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { useBooleanState } from "../hooks/useBoolean";
@@ -31,32 +37,32 @@ export const Feedback: React.FC<FeedbackProps> = React.memo(({ options, username
     );
 
     return (
-        <AppContext.Provider value={appContext}>
-            <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
-                <StyledButton
-                    buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}
-                    variant="contained"
-                    color="primary"
-                    endIcon={<FeedbackIcon />}
-                    onClick={openDialog}
-                    disableElevation
-                >
-                    {i18n.t("Send feedback")}
-                </StyledButton>
-                <FeedbackDialog
-                    open={showDialog}
-                    onClose={closeDialog}
-                    onSend={onSend}
-                    options={options?.layoutOptions}
-                    repositories={{ clickUp: options?.repositories.clickUp }}
-                />
-                <SubmitDialog
-                    open={showSubmitDialog}
-                    onClose={closeSubmitDialog}
-                    content={contentSubmitDialog}
-                />
-            </Container>
-        </AppContext.Provider>
+        <StylesProvider generateClassName={generateClassName}>
+            <AppContext.Provider value={appContext}>
+                <Container buttonPosition={options?.layoutOptions?.buttonPosition ?? "bottom-end"}>
+                    <div style={style} onClick={openDialog}>
+                        {i18n.t("Send feedback")}{" "}
+                        <FeedbackIcon style={{ paddingTop: 2, marginLeft: 3 }} fontSize="small" />
+                    </div>
+
+                    {showDialog && (
+                        <FeedbackDialog
+                            open={true}
+                            onClose={closeDialog}
+                            onSend={onSend}
+                            options={options?.layoutOptions}
+                            repositories={{ clickUp: options?.repositories.clickUp }}
+                        />
+                    )}
+
+                    <SubmitDialog
+                        open={showSubmitDialog}
+                        onClose={closeSubmitDialog}
+                        content={contentSubmitDialog}
+                    />
+                </Container>
+            </AppContext.Provider>
+        </StylesProvider>
     );
 });
 
@@ -91,7 +97,8 @@ const Container = styled(({ buttonPosition: _buttonPosition, ...other }: Contain
     ...theme.root,
 });
 
-const StyledButton = styled(
+// MUI class name styles clashing, use a div for now.
+const _StyledButton = styled(
     ({ buttonPosition: _buttonPosition, ...other }: ContainerProps & ButtonProps) => (
         <Button {...other}></Button>
     )
@@ -105,3 +112,18 @@ const StyledButton = styled(
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
 });
+
+const generateClassName = createGenerateClassName({ productionPrefix: "fc" });
+
+const style: React.CSSProperties = {
+    padding: "2px 10px 2px 10px",
+    fontSize: "12px",
+    cursor: "pointer",
+    color: "#FFFFFF",
+    backgroundColor: "#ff9800",
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeight: 500,
+    lineHeight: 1.75,
+    letterSpacing: "0.02857em",
+    textTransform: "uppercase",
+};
