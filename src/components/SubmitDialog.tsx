@@ -1,7 +1,7 @@
 import React from "react";
 import { DialogContent, DialogContentText, DialogTitle, styled } from "@material-ui/core";
 import { ThemedDialog } from "./FeedbackDialog";
-import i18n from "../locales";
+import i18n from "../utils/i18n";
 
 interface SubmitDialogProps {
     open: boolean;
