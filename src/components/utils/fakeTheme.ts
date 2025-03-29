@@ -3,7 +3,6 @@ import {
     SimplePaletteColorOptions,
 } from "@material-ui/core/styles/createPalette";
 import { CSSProperties } from "react";
-import _ from "lodash";
 import { ThemeOptions } from "@material-ui/core";
 import { orange500, orange700, white } from "material-ui/styles/colors";
 
