@@ -1,5 +1,4 @@
 import * as fluture from "fluture";
-import _ from "lodash";
 
 export class Future<E, D> {
     private constructor(private instance: fluture.FutureInstance<E, D>) {}
