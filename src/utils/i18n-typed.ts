@@ -17,7 +17,7 @@ export type I18nTArgs<Str extends string> = Interpolations<Str> extends Record<s
 
 interface Options {
     ns: string; // namespace
-    nsSeparator: string; // By default, ":", which breaks strings containing that char
+    nsSeparator: false | string; // By default, ":", which breaks strings containing that char
     lng: string; // language
 }
 
