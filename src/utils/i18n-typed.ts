@@ -7,7 +7,6 @@ export function getModuleForNamespace(namespace: string) {
             return i18n.t(s, { ...options, ns: namespace });
         },
         changeLanguage: i18n.changeLanguage.bind(i18n),
-        setDefaultNamespace: i18n.setDefaultNamespace.bind(i18n),
     };
 }
 
@@ -17,7 +16,7 @@ export type I18nTArgs<Str extends string> = Interpolations<Str> extends Record<s
 
 interface Options {
     ns: string; // namespace
-    nsSeparator: false | string; // By default, ":", which breaks strings containing that char
+    nsSeparator: string | boolean; // By default, ":", which breaks strings containing that char
     lng: string; // language
 }
 
