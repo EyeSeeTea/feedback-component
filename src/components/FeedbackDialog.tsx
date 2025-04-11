@@ -21,7 +21,7 @@ import { LayoutOptions } from "../domain/entities/Feedback";
 import { checkIfBrowserSupported } from "../data/repositories/ScreenshotDefaultRepository";
 import { useAppContext } from "../contexts/AppContext";
 import theme from "./utils/fakeTheme";
-import i18n from "../locales";
+import i18n from "../utils/i18n";
 import {
     initialUserFeedback,
     initialValidation,

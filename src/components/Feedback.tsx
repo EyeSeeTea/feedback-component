@@ -14,7 +14,7 @@ import { SubmitDialog } from "./SubmitDialog";
 import { getCompositionRoot } from "../CompositionRoot";
 import { AppContext } from "../contexts/AppContext";
 import theme from "./utils/fakeTheme";
-import i18n from "../locales";
+import i18n from "../utils/i18n";
 
 interface FeedbackProps {
     options: FeedbackOptions;

@@ -1,5 +1,4 @@
 import * as fluture from "fluture";
-import _ from "lodash";
 
 export class Future<E, D> {
     private constructor(private instance: fluture.FutureInstance<E, D>) {}
@@ -65,15 +64,14 @@ export class Future<E, D> {
 
     static joinObj<FuturesObj extends Record<string, Future<any, any>>>(
         futuresObj: FuturesObj,
-        options: { maxConcurrency?: number } = {}
+        options = { maxConcurrency: 10 }
     ): JoinObj<FuturesObj> {
-        const { maxConcurrency = 10 } = options;
-        const parallel = fluture.parallel(maxConcurrency);
-        const keys = _.keys(futuresObj);
-        const futures = _.values(futuresObj);
-        const flutures = parallel(futures.map(future => future.instance));
-        const futureObj = new Future(flutures).map(values => _.zipObject(keys, values));
-        return futureObj as JoinObj<FuturesObj>;
+        const asyncs = Object.values(futuresObj);
+        return Future.parallel(asyncs, options).map(values => {
+            const keys = Object.keys(futuresObj);
+            const pairs = keys.map((key, idx) => [key, values[idx]]);
+            return Object.fromEntries(pairs);
+        });
     }
 }
 
