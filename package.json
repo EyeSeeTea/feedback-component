@@ -1,7 +1,7 @@
 {
     "name": "@eyeseetea/feedback-component",
     "description": "Feedback component for React apps",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
     "repository": {
